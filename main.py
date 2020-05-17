@@ -25,7 +25,6 @@ async def run1(cid: int, fields: List[str]):
     values = await hmget(cid, *fields)
     # Create a dict of <se metadata name>: <se metadata value>
     results = dict(zip(fields, values))
-    LOGGER.info(results)
     # Redis returns all values as str
     # Format metadata values to correct types
     if 'a' in results and results['a'] is not None:
@@ -42,6 +41,7 @@ async def run1(cid: int, fields: List[str]):
         results['j'] = int(results['j'])
     if 'k' in results and results['k'] is not None:
         results['k'] = int(results['k'])
+    LOGGER.info(results)
     return results
 
 FEILDS_INT = set(['a', 'b', 'i', 'j', 'k'])
@@ -69,7 +69,9 @@ async def dict_zip_convert(fields, values):
 async def run2(cid: int, fields: List[str]):
     values = await hmget(cid, *fields)
     # Create a dict of <se metadata name>: <se metadata value>
-    return await dict_zip_convert(fields, values)
+    results = await dict_zip_convert(fields, values)
+    LOGGER.info(results)
+    return results
 
 
 async def main():
@@ -77,13 +79,59 @@ async def main():
     fields = ["a", "b", "c", "d", "e", "f", "g", "h"]
     data = await run2(cid, fields)
 
+# ============================================================================
+
+# Mock func for redis
+
+
+def hmget2(cid: int, *fields):
+    return [
+        "1",
+        "14",
+        "www.google.com",
+        "40.7127",
+        "-74.0059",
+        "Google",
+        "US",
+        "en",
+    ]
+
+
+def run3(cid: int, fields: List[str]):
+    values = hmget2(cid, *fields)
+    # Create a dict of <se metadata name>: <se metadata value>
+    results = dict(zip(fields, values))
+    # Redis returns all values as str
+    # Format metadata values to correct types
+    if 'a' in results and results['a'] is not None:
+        results['a'] = int(results['a'])
+    if 'd' in results and results['d'] is not None:
+        results['d'] = float(results['d'])
+    if 'e' in results and results['e'] is not None:
+        results['e'] = float(results['e'])
+    if 'b' in results and results['b'] is not None:
+        results['b'] = int(results['b'])
+    if 'i' in results and results['i'] is not None:
+        results['i'] = int(results['i'])
+    if 'j' in results and results['j'] is not None:
+        results['j'] = int(results['j'])
+    if 'k' in results and results['k'] is not None:
+        results['k'] = int(results['k'])
+    LOGGER.info(results)
+    return results
+
+
+def main2():
+    cid = 34
+    fields = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    data = run3(cid, fields)
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     start_time = time.time() * 1000
-    loop = asyncio.get_event_loop()
-    # Blocking call which returns when the hello_world() coroutine is done
-    loop.run_until_complete(main())
-    loop.close()
+    main2()
+    # asyncio.run(main())
     end_time = time.time() * 1000
     elapsed_time = end_time - start_time
     LOGGER.info(elapsed_time)

@@ -58,7 +58,6 @@ setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Topic :: Utilities',
     ],
@@ -74,7 +73,7 @@ setup(
     # project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/technical.html#install-requires-vs-requirements-files
-    python_requires=">=3.6",
+    python_requires=">=3.7.7",
     install_requires=[],
     extras_require={
         'dev': dev_require,
